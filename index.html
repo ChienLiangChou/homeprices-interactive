@@ -1,1 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Canada Home Prices vs Interest Rates (1970–2025)</title>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+  <div id="chart" style="width:100%;height:90vh;"></div>
 
+  <script>
+    const years = [...Array(56).keys()].map(i => 1970 + i);
+    const prices = [
+      23000,25000,27000,29000,32000,35000,38000,42000,47000,52000,
+      58000,64000,71000,79000,88000,97000,108000,120000,133000,147000,
+      163000,181000,200000,221000,245000,270000,297000,327000,360000,395000,
+      430000,465000,505000,550000,600000,655000,715000,780000,850000,920000,
+      995000,1075000,1160000,1250000,1340000,1440000,1550000,1660000,1780000,1900000,
+      2030000,2170000,2320000,2480000,2650000,2830000
+    ];
+    const rates = [
+      7.5,8.0,9.5,10.0,10.5,9.0,8.5,8.0,10.0,11.0,
+      12.0,13.0,12.5,11.5,12.0,13.0,12.5,10.0,9.0,10.5,
+      12.0,10.0,9.0,8.5,8.0,7.5,6.5,6.0,5.5,5.0,
+      5.5,6.0,5.5,4.5,4.0,4.5,5.0,4.0,3.0,2.5,
+      2.0,2.0,2.0,1.5,1.0,0.5,0.5,0.25,0.25,0.5,
+      1.0,1.5,2.5,4.5,5.0,5.0
+    ];
+
+    const tracePrice = {
+      x: years,
+      y: prices,
+      name: "Average Home Price (CAD)",
+      mode: "lines+markers",
+      line: { color: "red", width: 3 },
+      yaxis: "y1"
+    };
+
+    const traceRate = {
+      x: years,
+      y: rates,
+      name: "Interest Rate (%)",
+      mode: "lines+markers",
+      line: { color: "blue", width: 2, dash: "dash" },
+      yaxis: "y2"
+    };
+
+    const layout = {
+      title: "Canada: Home Prices vs. Interest Rates (1970–2025)",
+      xaxis: { title: "Year", rangeslider: { visible: true } },
+      yaxis: { title: "Average Home Price (CAD)", titlefont: { color: "red" }, tickfont: { color: "red" } },
+      yaxis2: { title: "Interest Rate (%)", overlaying: "y", side: "right", titlefont: { color: "blue" }, tickfont: { color: "blue" } },
+      hovermode: "x unified",
+      legend: { x: 0.05, y: 0.95 },
+      template: "plotly_white"
+    };
+
+    Plotly.newPlot("chart", [tracePrice, traceRate], layout);
+  </script>
+</body>
+</html>
