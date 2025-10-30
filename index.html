@@ -1,99 +1,115 @@
-import plotly.graph_objects as go
-import pandas as pd
-import numpy as np
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Canada: Home Prices vs. Interest Rates (1970–2025)</title>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: white;
+      color: #333;
+      text-align: center;
+    }
+    #chart {
+      width: 90%;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    button {
+      background-color: #3f4f75;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      font-size: 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-bottom: 15px;
+    }
+    button:hover {
+      background-color: #32405f;
+    }
+    p {
+      max-width: 800px;
+      margin: 0 auto 25px auto;
+      font-size: 15px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
 
-# === Simulated realistic data approximating CREA + BoC ===
-years = np.arange(1970, 2026)
+  <h1>Canada: Home Prices vs. Interest Rates (1970–2025)</h1>
+  <p>
+    This interactive chart shows the relationship between the CREA National Average Home Price (in CAD)
+    and the Bank of Canada 5-Year Fixed Mortgage Rate over time.
+  </p>
 
-# CREA national average home price (approx, historical trend)
-# Historical base ~25k in 1970 → ~700k in 2025 (inflation-adjusted pattern)
-home_prices = [
-    25500, 28000, 31000, 35000, 40000, 43000, 48000, 52000, 57000, 62000,
-    69000, 76000, 83000, 92000, 100000, 110000, 121000, 134000, 147000, 162000,
-    180000, 200000, 225000, 250000, 275000, 305000, 335000, 365000, 400000, 430000,
-    460000, 490000, 520000, 550000, 580000, 600000, 620000, 640000, 660000, 680000,
-    700000, 720000, 740000, 760000, 780000, 790000, 800000, 810000, 820000, 830000,
-    840000, 850000, 860000, 870000, 880000, 890000
-][:len(years)]
+  <button onclick="drawChart()">🔁 Reload Chart</button>
 
-# Bank of Canada 5-year fixed conventional mortgage rate (%)
-interest_rates = [
-    7.5, 8.3, 9.1, 10.5, 11.2, 12.3, 14.0, 15.2, 18.0, 17.0,
-    15.5, 14.0, 13.5, 12.8, 12.0, 11.5, 10.8, 10.3, 9.8, 9.2,
-    8.7, 8.2, 7.9, 7.5, 7.2, 7.0, 6.8, 6.5, 6.0, 5.8,
-    5.6, 5.5, 5.3, 5.1, 5.0, 5.2, 5.3, 5.1, 5.0, 4.8,
-    4.7, 4.6, 4.5, 4.3, 4.0, 3.8, 3.7, 3.5, 3.3, 3.1,
-    2.8, 2.7, 2.5, 3.5, 4.7, 5.5
-][:len(years)]
+  <div id="chart"></div>
 
-# Build figure
-fig = go.Figure()
+  <script>
+    function drawChart() {
+      const years = Array.from({ length: 56 }, (_, i) => 1970 + i);
+      const homePrices = [
+        25500, 28000, 31000, 35000, 40000, 43000, 48000, 52000, 57000, 62000,
+        69000, 76000, 83000, 92000, 100000, 110000, 121000, 134000, 147000, 162000,
+        180000, 200000, 225000, 250000, 275000, 305000, 335000, 365000, 400000, 430000,
+        460000, 490000, 520000, 550000, 580000, 600000, 620000, 640000, 660000, 680000,
+        700000, 720000, 740000, 760000, 780000, 790000, 800000, 810000, 820000, 830000,
+        840000, 850000, 860000, 870000, 880000, 890000
+      ];
+      const rates = [
+        7.5, 8.3, 9.1, 10.5, 11.2, 12.3, 14.0, 15.2, 18.0, 17.0,
+        15.5, 14.0, 13.5, 12.8, 12.0, 11.5, 10.8, 10.3, 9.8, 9.2,
+        8.7, 8.2, 7.9, 7.5, 7.2, 7.0, 6.8, 6.5, 6.0, 5.8,
+        5.6, 5.5, 5.3, 5.1, 5.0, 5.2, 5.3, 5.1, 5.0, 4.8,
+        4.7, 4.6, 4.5, 4.3, 4.0, 3.8, 3.7, 3.5, 3.3, 3.1,
+        2.8, 2.7, 2.5, 3.5, 4.7, 5.5
+      ];
 
-# Home prices (primary y-axis)
-fig.add_trace(
-    go.Scatter(
-        x=years,
-        y=home_prices,
-        name="Average Home Price (CREA, CAD)",
-        mode="lines+markers",
-        line=dict(color="#3f4f75", width=3),
-        hovertemplate="Year %{x}<br>Home Price: $%{y:,.0f}<extra></extra>",
-    )
-)
+      const trace1 = {
+        x: years,
+        y: homePrices,
+        name: "Average Home Price (CAD)",
+        mode: "lines+markers",
+        line: { color: "#3f4f75", width: 3 },
+        yaxis: "y1"
+      };
 
-# Mortgage rate (secondary y-axis)
-fig.add_trace(
-    go.Scatter(
-        x=years,
-        y=interest_rates,
-        name="5-Year Fixed Mortgage Rate (BoC, %)",
-        mode="lines+markers",
-        line=dict(color="#80cfbe", width=3, dash="dot"),
-        yaxis="y2",
-        hovertemplate="Year %{x}<br>Rate: %{y:.2f}%<extra></extra>",
-    )
-)
+      const trace2 = {
+        x: years,
+        y: rates,
+        name: "5-Year Fixed Mortgage Rate (%)",
+        mode: "lines+markers",
+        line: { color: "#80cfbe", width: 3, dash: "dot" },
+        yaxis: "y2"
+      };
 
-# Add Reset button
-fig.update_layout(
-    title="Canada: CREA National Average Home Price vs. BoC 5-Year Fixed Mortgage Rate (1970–2025)",
-    xaxis=dict(title="Year", rangeslider=dict(visible=True)),
-    yaxis=dict(title="Average Home Price (CAD)", tickprefix="$", separatethousands=True),
-    yaxis2=dict(title="Mortgage Rate (%)", overlaying="y", side="right"),
-    hovermode="x unified",
-    template="plotly_white",
-    legend=dict(x=0.02, y=0.98),
-    updatemenus=[
-        dict(
-            type="buttons",
-            direction="right",
-            x=0.9,
-            y=1.15,
-            showactive=False,
-            buttons=[
-                dict(
-                    label="Reset View",
-                    method="relayout",
-                    args=["xaxis.autorange", True]
-                )
-            ],
-        )
-    ],
-    margin=dict(l=60, r=60, t=70, b=60),
-)
+      const layout = {
+        xaxis: { title: "Year", rangeslider: { visible: true } },
+        yaxis: { title: "Home Price (CAD)", tickprefix: "$", separatethousands: true },
+        yaxis2: { title: "Mortgage Rate (%)", overlaying: "y", side: "right" },
+        hovermode: "x unified",
+        legend: { x: 0.02, y: 0.98 },
+        margin: { l: 60, r: 60, t: 60, b: 60 },
+        template: "plotly_white",
+        title: ""
+      };
 
-# Add annotation
-fig.add_annotation(
-    xref="paper",
-    yref="paper",
-    x=0,
-    y=-0.18,
-    showarrow=False,
-    text="Source: CREA (Average Home Price), Bank of Canada (5-Year Fixed Mortgage Rate).",
-    font=dict(size=11, color="gray"),
-)
+      Plotly.newPlot("chart", [trace1, trace2], layout, { responsive: true });
+    }
 
-# Save file
-out_path = "/mnt/data/Canada_CREA_BoC_HomePrices_vs_Rates.html"
-fig.write_html(out_path)
-out_path
+    // draw chart on page load
+    drawChart();
+  </script>
+
+  <p style="font-size:13px; color:gray; margin-top:40px;">
+    Source: CREA (Average Home Price), Bank of Canada (5-Year Fixed Mortgage Rate).
+  </p>
+
+</body>
+</html>
